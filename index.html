@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>更好的编辑器</title>
     <script type="module" src="/src/main.ts"></script>
+    <link rel="stylesheet" href="/src/style.css">
   </head>
   <body>
-    <textarea id="input" rows="20" cols="60" placeholder="在此输入页面代码……"></textarea>
-    <iframe id="output"></iframe>
+    <input id="title" type="text" size="35" maxlength="128">
+    <textarea id="source" rows="20" cols="60" placeholder="在此输入页面代码……"></textarea>
+    <iframe id="preview"></iframe>
   </body>
 </html>

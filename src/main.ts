@@ -1,14 +1,20 @@
 import { Page } from "./page.ts";
 
-const input = document.getElementById("input");
-const output = document.getElementById("output");
+function typecheck(obj: HTMLElement, type: typeof HTMLElement): void {
+  if (!(obj instanceof type)) throw TypeError;
+}
 
-if (!(input instanceof HTMLTextAreaElement)) throw TypeError;
-if (!(output instanceof HTMLIFrameElement)) throw TypeError;
+const title = document.getElementById("title") as HTMLInputElement;
+const source = document.getElementById("source") as HTMLTextAreaElement;
+const preview = document.getElementById("preview") as HTMLIFrameElement;
 
-input.addEventListener("input", function(event: InputEvent): void {
-  const target = event.target as HTMLTextAreaElement;
-  const source = target.value;
-  const page = new Page();
-  output.srcdoc = page.render(source);
-})
+typecheck(title, HTMLInputElement);
+typecheck(source, HTMLTextAreaElement);
+typecheck(preview, HTMLIFrameElement);
+
+function render(_: InputEvent): void {
+  preview.srcdoc = new Page().render(title.value, source.value);
+}
+
+title.addEventListener("input", render);
+source.addEventListener("input", render);

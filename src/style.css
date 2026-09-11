@@ -1,0 +1,107 @@
+@charset "UTF-8";
+@import "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap";
+@import "https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap";
+@import "https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&display=swap";
+@import "https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap";
+
+:root {
+  --body-font: Inter, "Noto Sans SC", "Noto Sans TC", "Segoe UI", Roboto, "Helvetica Neue", "Liberation Sans", Arial, sans-serif;
+  --mono-font: "JetBrains Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", "Noto Sans SC", "Noto Sans TC", monospace;
+  --body-font-size: clamp(0.825rem, calc(0.775rem + 0.195vw), 1rem);
+  --body-line-height: 1.5;
+  --body-width: 45rem;
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  --base-white: 252, 252, 252;
+  --base-light: 244, 244, 244;
+  --base-medium: 221, 221, 221;
+  --base-dark: 66, 66, 66;
+  --base-black: 12, 12, 12;
+
+  --base-accent-light: 68, 123, 230;
+  --base-accent-medium: 24, 80, 187;
+  --base-accent-dark: 23, 24, 120;
+
+  --bg-color: var(--base-white);
+  --text-color: var(--base-black);
+  --light-bg-color: var(--base-light);
+  --light-text-color: var(--base-black);
+  --medium-bg-color: var(--base-medium);
+  --medium-text-color: var(--base-black);
+  --dark-bg-color: var(--base-dark);
+  --dark-text-color: var(--base-white);
+  --focus-bg-color: var(--base-accent-light);
+  --focus-text-color: var(--base-white);
+
+  --link-color: var(--base-accent-medium);
+  --link-hover-color: var(--base-accent-light);
+  --link-visited-color: var(--base-accent-dark);
+
+  --border-color: var(--text-color), 0.25;
+  --border-width: 0.0625rem;
+
+  --selection-bg-color: var(--focus-bg-color);
+  --selection-text-color: var(--focus-text-color);
+  --scrollbar-track-color: var(--medium-bg-color), 0.2;
+  --scrollbar-thumb-color: var(--dark-bg-color), 0.4;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--scrollbar-thumb-color)) rgb(var(--scrollbar-track-color));
+}
+body {
+  background: rgb(var(--bg-color));
+  color: rgb(var(--text-color));
+  font-family: var(--body-font);
+  font-size: var(--body-font-size);
+  line-height: var(--body-line-height);
+  width: var(--body-width);
+  max-width: calc(100% - 3rem);
+  margin: 1.5rem auto;
+  overflow-wrap: break-word;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+::-webkit-scrollbar {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+::-webkit-scrollbar-track {
+  background: rgb(var(--scrollbar-track-color));
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--scrollbar-thumb-color));
+}
+::selection {
+  background: rgb(var(--selection-bg-color));
+  color: rgb(var(--selection-text-color));
+}
+#title, #source {
+  appearance: none;
+  margin: 0;
+  outline: 0;
+  border-radius: 0;
+  font: inherit;
+  box-sizing: border-box;
+  max-width: 100%;
+  background: rgb(var(--bg-color));
+  color: rgb(var(--text-color));
+  border: var(--border-width) solid rgb(var(--border-color));
+  margin: 0;
+  padding: 0 0.25em;
+  box-shadow: 0 0 0 0 rgb(var(--focus-bg-color));
+  transition: box-shadow var(--transition), border-color var(--transition);
+}
+:is(#title, #source):focus-visible {
+  box-shadow: 0 0 0 0.125em rgb(var(--focus-bg-color));
+  border-color: rgb(var(--focus-bg-color));
+}
+#source {
+  resize: vertical;
+}
+#preview {
+  border: 0;
+}

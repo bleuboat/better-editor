@@ -11,11 +11,11 @@ export class Page {
     this.renderers = {};
   }
 
-  parse(source: string): string {
+  parse(_title: string, source: string): string {
     return source;
   }
 
-  render(source: string): string {
-    return this.parse(source);
+  render(title: string, source: string): string {
+    return this.parse(title, source);
   }
 }
