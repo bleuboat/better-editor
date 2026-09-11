@@ -1,9 +1,11 @@
-import { DELIM, RENDERERS, RULES } from "./renderUtils.ts"
+import { DELIM, RENDERERS, RULES, Renderer } from "./renderUtils.ts";
+import "./renderers.ts";
+
 
 export class Page {
-  tokens: [string, Map<string, unknown>][]
-  vars: Map<string, unknown>
-  renderers: Map<string, any>
+  tokens: [string, { [key: string]: unknown }][];
+  vars: Map<string, unknown>;
+  renderers: Map<string, Renderer>;
 
   constructor() {
     this.tokens = [];
@@ -14,9 +16,10 @@ export class Page {
   parse(source: string): string {
     if (this.renderers.size === 0) {
       for (const rule of RULES) {
-        const Renderer = RENDERERS.get(rule);
-        if (Renderer !== undefined) {
-          this.renderers.set(Renderer.name, new Renderer(this));
+        const RendererType = RENDERERS.get(rule);
+        if (RendererType !== undefined) {
+          const renderer = new RendererType(rule, this);
+          this.renderers.set(rule, renderer);
         }
       }
     }
@@ -36,7 +39,11 @@ export class Page {
           const num_key = Number(key.join(""));
           const rule = this.tokens[num_key][0];
           const opts = this.tokens[num_key][1];
-          output.push(this.renderers.get(rule)?.render(opts));
+          const renderer = this.renderers.get(rule);
+          if (renderer === undefined) {
+            throw Error;
+          }
+          output.push(renderer.render(opts));
           in_delim = false;
         } else {
           key.push(char);

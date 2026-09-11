@@ -1,5 +1,6 @@
+import type { Page } from "./page";
+
 export const DELIM = "\xFF";
-export const RENDERERS = new Map<string, any>();
 export const RULES = [
   "Include",
   "Prefilter",
@@ -70,3 +71,51 @@ export const RULES = [
   "Typography",
   "Tighten",
 ];
+
+
+export class Renderer {
+  regex: RegExp | undefined;
+  rule: string;
+  page: Page;
+
+  constructor(rule: string, page: Page) {
+    this.rule = rule;
+    this.page = page;
+  }
+
+  token(options: { [key: string]: unknown }): string {
+    this.page.tokens.push([this.rule, options]);
+    return DELIM + String(this.page.tokens.length - 1) + DELIM;
+  }
+
+  _parse(source: string): string {
+    if (this.regex === undefined) {
+      throw Error;
+    }
+    return source.replaceAll(this.regex, this.process);
+  }
+
+  parse(source: string): string {
+    try {
+      source = this._parse(source);
+    } catch (error) {
+      console.error(error);
+    }
+    return source;
+  }
+
+  process = (..._matches: string[]): string => {
+    throw Error;
+  }
+
+  render = (_options: { [key: string]: unknown }): string => {
+    throw Error;
+  }
+
+  error(message: string): string {
+    return `<div class="error-block">${message}</div>`
+  }
+}
+
+
+export const RENDERERS = new Map<string, typeof Renderer>();

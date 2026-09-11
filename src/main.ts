@@ -42,8 +42,8 @@ if (stored !== null) {
     source: string;
     tags: string;
   } = JSON.parse(stored);
-  title.value = data["title"];
-  source.value = data["source"];
-  tags.value = data["tags"];
+  title.value = data.title;
+  source.value = data.source;
+  tags.value = data.tags;
   render();
 }
