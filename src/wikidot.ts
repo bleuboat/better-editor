@@ -15,21 +15,26 @@ export function load(doc: Document): void {
   }
 
   // Account
-  const accountTopbutton = doc.getElementById("account-topbutton") as HTMLAnchorElement;
-  const accountOptions = doc.getElementById("account-options") as HTMLDivElement;
+  const accountTopbutton = doc.getElementById("account-topbutton");
+  const accountOptions = doc.getElementById("account-options");
 
-  accountTopbutton.addEventListener("mousedown", () => {
-    accountOptions.style = "display: block;";
-  });
-  accountOptions.addEventListener("mouseleave", () => {
-    accountOptions.style = "display: none;";
-  });
+  if (
+    accountTopbutton instanceof HTMLAnchorElement &&
+    accountOptions instanceof HTMLDivElement
+  ) {
+    accountTopbutton.addEventListener("mousedown", () => {
+      accountOptions.style = "display: block;";
+    });
+    accountOptions.addEventListener("mouseleave", () => {
+      accountOptions.style = "display: none;";
+    });
+  }
 
   // Search
   const searchInput = doc.querySelector("#search-top-box-input") as HTMLInputElement;
   const searchButton = doc.querySelector("#search-top-box-form .btn") as HTMLInputElement;
 
   searchButton.addEventListener("click", () => {
-    window.open(`https://brcn.backroomswiki.cn/search:site/q/${searchInput.value}`)
-  })
+    window.open(`https://brcn.backroomswiki.cn/search:site/q/${searchInput.value}`);
+  });
 }

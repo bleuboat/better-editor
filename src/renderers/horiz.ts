@@ -1,7 +1,7 @@
 import { Renderer } from "../utils/render.ts";
 
 (class extends Renderer {
-  regex = /^.*?\n\s*?\n/mg;
+  regex = /^([-]\{4,\})$/mg;
 
   process = (...matches: string[]): string => {
     return matches[0];
@@ -10,5 +10,5 @@ import { Renderer } from "../utils/render.ts";
   render = (_options: { [key: string]: unknown }): string => {
     return "";
   };
-}).register("Paragraph");
+}).register("Horiz");
 

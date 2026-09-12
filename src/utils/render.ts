@@ -73,6 +73,7 @@ export const RULES = [
 ];
 
 export class Renderer {
+  static all: Map<string, typeof Renderer> = new Map();
   regex: RegExp | undefined;
   rule: string;
   page: Page;
@@ -82,22 +83,23 @@ export class Renderer {
     this.page = page;
   }
 
+  static register(name: string): void {
+    Renderer.all.set(name, this);
+  }
+
   token(options: { [key: string]: unknown }): string {
     this.page.tokens.push([this.rule, options]);
     return DELIM + String(this.page.tokens.length - 1) + DELIM;
   }
 
-  _parse(source: string): string {
-    if (!this.regex) throw Error;
+  parse(source: string): string {
+    if (!this.regex) return source;
     return source.replaceAll(this.regex, this.process);
   }
 
-  parse(source: string): string {
-    try {
-      source = this._parse(source);
-    } catch (error) {
-      console.error(error);
-    }
+  parseWithFallback(source: string): string {
+    try { source = this.parse(source); }
+    catch (error) { console.error(error); }
     return source;
   }
 
@@ -113,5 +115,3 @@ export class Renderer {
     return `<div class="error-block">${message}</div>`;
   }
 }
-
-export const RENDERERS = new Map<string, typeof Renderer>();

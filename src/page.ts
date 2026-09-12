@@ -1,7 +1,7 @@
 import "./renderers.ts";
 import type { DataType } from "./utils/data.ts";
 import { printUser } from "./utils/printuser.ts";
-import { DELIM, RENDERERS, RULES, Renderer } from "./utils/render.ts";
+import { DELIM, RULES, Renderer } from "./utils/render.ts";
 
 export class Page {
   renderers: Map<string, Renderer>;
@@ -16,7 +16,7 @@ export class Page {
     this.head = "";
 
     for (const rule of RULES) {
-      const RendererType = RENDERERS.get(rule);
+      const RendererType = Renderer.all.get(rule);
       if (RendererType) {
         const renderer = new RendererType(rule, this);
         this.renderers.set(rule, renderer);
@@ -65,7 +65,7 @@ export class Page {
 
   renderSource(source: string): string {
     for (const renderer of this.renderers.values()) {
-      source = renderer.parse(source);
+      source = renderer.parseWithFallback(source);
     }
     const output: string[] = [];
     const key: string[] = [];
