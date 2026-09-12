@@ -1,4 +1,4 @@
-import type { Page } from "./page";
+import type { Page } from "../page.ts";
 
 export const DELIM = "\xFF";
 export const RULES = [
@@ -88,9 +88,7 @@ export class Renderer {
   }
 
   _parse(source: string): string {
-    if (this.regex === undefined) {
-      throw Error;
-    }
+    if (!this.regex) throw Error;
     return source.replaceAll(this.regex, this.process);
   }
 

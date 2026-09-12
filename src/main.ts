@@ -1,50 +1,37 @@
 import { Page } from "./page.ts";
-
-function typecheck(obj: HTMLElement, type: typeof HTMLElement): void {
-  if (!(obj instanceof type)) throw TypeError;
-}
+import type { DataType } from "./utils/data.ts";
+import { load } from "./wikidot.ts";
 
 const title = document.getElementById("title") as HTMLInputElement;
 const source = document.getElementById("source") as HTMLTextAreaElement;
 const tags = document.getElementById("tags") as HTMLInputElement;
 const preview = document.getElementById("preview") as HTMLIFrameElement;
-
-typecheck(title, HTMLInputElement);
-typecheck(source, HTMLTextAreaElement);
-typecheck(tags, HTMLInputElement);
-typecheck(preview, HTMLIFrameElement);
+const previewButton = document.getElementById("preview-button") as HTMLInputElement;
+const saveButton = document.getElementById("save-button") as HTMLInputElement;
 
 const page = new Page();
 
-function render(): { title: string; source: string; tags: string } {
-  const data = {
-    title: title.value,
-    source: source.value,
-    tags: tags.value,
-  };
-  preview.srcdoc = page.renderHtml(data);
-  return data;
-}
-
-const eventListener = (_: InputEvent): void => {
-  localStorage.setItem("data", JSON.stringify(render()));
+const getData = (): DataType => {
+  return { title: title.value, source: source.value, tags: tags.value };
 };
 
-title.addEventListener("input", eventListener);
-source.addEventListener("input", eventListener);
-tags.addEventListener("input", eventListener);
-
-// store
-const stored = localStorage.getItem("data");
-if (stored !== null) {
-  const data: {
-    title: string;
-    source: string;
-    tags: string;
-  } = JSON.parse(stored);
+const saved = localStorage.getItem("data");
+if (saved) {
+  const data: DataType = JSON.parse(saved);
   title.value = data.title;
   source.value = data.source;
   tags.value = data.tags;
 }
 
-render();
+previewButton.addEventListener("click", () => {
+  preview.srcdoc = page.renderHtml(getData());
+  preview.addEventListener("load", () => {
+    load(preview.contentDocument!);
+  });
+});
+
+saveButton.addEventListener("click", () => {
+  localStorage.setItem("data", JSON.stringify(getData()));
+});
+
+previewButton.click();

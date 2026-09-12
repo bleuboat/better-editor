@@ -85,15 +85,34 @@ body {
   flex-wrap: wrap;
   gap: 0.5rem;
 }
-#title,
-#source,
-#tags {
+input,
+textarea {
   appearance: none;
   margin: 0;
   outline: 0;
   border-radius: 0;
   font: inherit;
   box-sizing: border-box;
+}
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+  cursor: pointer;
+  padding: 0.375em 0.75em;
+  border: 0;
+  background: rgb(var(--light-bg-color));
+  color: rgb(var(--light-text-color));
+  transition:
+    background var(--transition),
+    color var(--transition);
+}
+.btn:is(:hover, :active, :focus) {
+  background: rgb(var(--medium-bg-color));
+  color: rgb(var(--medium-text-color));
+}
+.text {
   max-width: 100%;
   flex: 1;
   background: rgb(var(--bg-color));
@@ -106,9 +125,15 @@ body {
     box-shadow var(--transition),
     border-color var(--transition);
 }
-:is(#title, #source, #tags):focus-visible {
+.text:focus-visible {
   box-shadow: 0 0 0 0.125em rgb(var(--focus-bg-color));
   border-color: rgb(var(--focus-bg-color));
+}
+#buttons {
+  flex: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 #source {
   resize: vertical;

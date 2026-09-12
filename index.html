@@ -10,10 +10,14 @@
   <body>
     <div id="editor">
       页面标题：
-      <input id="title" type="text" size="35" maxlength="128">
-      <textarea id="source" rows="20" cols="60" placeholder="在此输入页面代码……"></textarea>
+      <input id="title" class="text" type="text" size="35" maxlength="128">
+      <textarea id="source" class="text" rows="20" cols="60" placeholder="在此输入页面代码……"></textarea>
       页面标签：
-      <input id="tags" type="text" size="35" maxlength="128">
+      <input id="tags" class="text" type="text" size="35" maxlength="128">
+      <div id="buttons">
+        <input id="preview-button" class="btn" type="button" value="预览">
+        <input id="save-button" class="btn" type="button" value="保存">
+      </div>
     </div>
     <iframe id="preview"></iframe>
   </body>

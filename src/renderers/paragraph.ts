@@ -1,4 +1,4 @@
-import { DELIM, RENDERERS, Renderer } from "../renderUtils.ts";
+import { DELIM, RENDERERS, Renderer } from "../utils/render.ts";
 
 export class Paragraph extends Renderer {
   regex = /^.*?\n\s*?\n/gms;

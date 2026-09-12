@@ -1,39 +1,72 @@
-import { DELIM, RENDERERS, RULES, Renderer } from "./renderUtils.ts";
 import "./renderers.ts";
+import type { DataType } from "./utils/data.ts";
+import { printUser } from "./utils/printuser.ts";
+import { DELIM, RENDERERS, RULES, Renderer } from "./utils/render.ts";
 
 export class Page {
-  tokens: [string, { [key: string]: unknown }][];
-  vars: Map<string, unknown>;
   renderers: Map<string, Renderer>;
-  internalStyle: string;
+  vars: Map<string, unknown>;
+  tokens: [string, { [key: string]: unknown }][];
   head: string;
 
   constructor() {
-    this.tokens = [];
-    this.vars = new Map();
     this.renderers = new Map();
-    this.internalStyle =
-      "@import url(https://github.backroomswiki.cn/Super_Liminal/css/basic-styles.css);\n";
+    this.vars = new Map();
+    this.tokens = [];
     this.head = "";
 
     for (const rule of RULES) {
       const RendererType = RENDERERS.get(rule);
-      if (RendererType !== undefined) {
+      if (RendererType) {
         const renderer = new RendererType(rule, this);
         this.renderers.set(rule, renderer);
       }
     }
   }
 
+  renderTitle(title: string): void {
+    const finalTitle =
+      title.length > 0 ? `${title} - The Backrooms中文维基` : `The Backrooms中文维基`;
+    this.head += `<title>${finalTitle}</title>\n`;
+  }
+
+  renderLoginStatus(): string {
+    const params = new URLSearchParams(window.location.search);
+    const number = params.get("number");
+    if (!number) {
+      return `
+        <a href="javascript:;" class="login-status-create-account btn">建立账户</a>
+        <span>或</span>
+        <a href="javascript:;" class="login-status-sign-in btn btn-primary">登入</a>
+      `;
+    }
+    const title = params.get("title");
+    const name = params.get("name");
+    if (!title || !name) {
+      throw Error;
+    }
+    return `
+      ${printUser(number, title, name)}
+      |
+      <a id="my-account" href="https://www.wikidot.com/account/activity">我的账户</a>
+      <a id="account-topbutton" href="javascript:;">▼</a>
+      <div id="account-options">
+        <ul>
+          <li><a href="https://www.wikidot.com/account/activity">活动</a></li>
+          <li><a href="https://www.wikidot.com/account/messages">消息</a></li>
+          <li><a href="https://www.wikidot.com/account/sites">网站</a></li>
+          <li><a href="https://www.wikidot.com/account/settings">设置</a></li>
+          <li><a href="https://www.wikidot.com/account/upgrade">升级</a></li>
+          <li><a href="javascript:;">登出</a></li>
+        </ul>
+      </div>
+    `;
+  }
+
   renderSource(source: string): string {
-    // init
-    this.tokens.length = 0;
-    this.vars.clear();
-
-    // parse
-    for (const renderer of this.renderers.values()) source = renderer.parse(source);
-
-    // render
+    for (const renderer of this.renderers.values()) {
+      source = renderer.parse(source);
+    }
     const output: string[] = [];
     const key: string[] = [];
     let in_delim = false;
@@ -44,9 +77,7 @@ export class Page {
           const rule = this.tokens[num_key][0];
           const opts = this.tokens[num_key][1];
           const renderer = this.renderers.get(rule);
-          if (renderer === undefined) {
-            throw Error;
-          }
+          if (!renderer) throw Error;
           output.push(renderer.render(opts));
           in_delim = false;
         } else {
@@ -61,8 +92,12 @@ export class Page {
         }
       }
     }
-    this.internalStyle +=
-      "@import url(https://github.backroomswiki.cn/Super_Liminal/css/super-liminal.css);\n";
+    this.head += `
+      <style type="text/css" id="internal-style">
+        @import url(https://github.backroomswiki.cn/Super_Liminal/css/basic-styles.css);
+        @import url(https://github.backroomswiki.cn/Old_BHL/css/liminal-impact.css);
+      </style>
+    `;
     return output.join("");
   }
 
@@ -74,21 +109,21 @@ export class Page {
       .join("");
   }
 
-  renderHtml({ title, source, tags }: { title: string; source: string; tags: string }): string {
+  renderHtml({ title, source, tags }: DataType): string {
+    this.vars.clear();
+    this.tokens.length = 0;
+    this.head = "";
+
+    this.renderTitle(title);
+    const loginStatus = this.renderLoginStatus();
     const content = this.renderSource(source);
-    const finalTitle =
-      title.length > 0 ? `${title} - The Backrooms中文维基` : `The Backrooms中文维基`;
     const finalTags = this.renderTags(tags);
     return `
 <!DOCTYPE html>
 <html>
 
 <head>
-    <title>${finalTitle}</title>
-    <style type="text/css" id="internal-style">
-      ${this.internalStyle}
-    </style>
-    ${this.head}
+  ${this.head}
 </head>
 
 <body id="html-body">
@@ -257,9 +292,7 @@ export class Page {
 </div>
                         </div>
                         <div id="login-status">
-                            <a href="javascript:;" class="login-status-create-account btn">建立账户</a>
-                            <span>或</span>
-                            <a href="javascript:;" class="login-status-sign-in btn btn-primary">登入</a>
+                            ${loginStatus}
                         </div>
                         <div id="header-extra-div-1"><span></span></div>
                         <div id="header-extra-div-2"><span></span></div>
