@@ -14,19 +14,16 @@ typecheck(source, HTMLTextAreaElement);
 typecheck(tags, HTMLInputElement);
 typecheck(preview, HTMLIFrameElement);
 
-function render(store: boolean = false): void {
-  // store
-  if (store) {
-    const data = {
-      title: title.value,
-      source: source.value,
-      tags: tags.value,
-    }
-    localStorage.setItem("data", JSON.stringify(data));
-  }
+const page = new Page();
 
-  const content = new Page().render(source.value);
-  preview.srcdoc = content;
+function render(store: boolean = false): void {
+  const data = {
+    title: title.value,
+    source: source.value,
+    tags: tags.value,
+  }
+  if (store) localStorage.setItem("data", JSON.stringify(data));
+  preview.srcdoc = page.renderHtml(data);
 }
 
 const eventListener = (_: InputEvent) => render(true);

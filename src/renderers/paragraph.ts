@@ -16,7 +16,7 @@ export class Paragraph extends Renderer {
     return matches[0];
   }
 
-  render = (options: { [key: string]: unknown }): string => {
+  render = (options: { [key: string]: unknown }) => {
     const type = options.type;
     if (type === "start") {
       return "<p>";
