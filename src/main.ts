@@ -16,17 +16,20 @@ typecheck(preview, HTMLIFrameElement);
 
 const page = new Page();
 
-function render(store: boolean = false): void {
+function render(): { title: string; source: string; tags: string } {
   const data = {
     title: title.value,
     source: source.value,
     tags: tags.value,
-  }
-  if (store) localStorage.setItem("data", JSON.stringify(data));
+  };
   preview.srcdoc = page.renderHtml(data);
+  return data;
 }
 
-const eventListener = (_: InputEvent) => render(true);
+const eventListener = (_: InputEvent): void => {
+  localStorage.setItem("data", JSON.stringify(render()));
+};
+
 title.addEventListener("input", eventListener);
 source.addEventListener("input", eventListener);
 tags.addEventListener("input", eventListener);
@@ -42,5 +45,6 @@ if (stored !== null) {
   title.value = data.title;
   source.value = data.source;
   tags.value = data.tags;
-  render();
 }
+
+render();

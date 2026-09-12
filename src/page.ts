@@ -1,16 +1,20 @@
 import { DELIM, RENDERERS, RULES, Renderer } from "./renderUtils.ts";
 import "./renderers.ts";
 
-
 export class Page {
   tokens: [string, { [key: string]: unknown }][];
   vars: Map<string, unknown>;
   renderers: Map<string, Renderer>;
+  internalStyle: string;
+  head: string;
 
   constructor() {
     this.tokens = [];
     this.vars = new Map();
     this.renderers = new Map();
+    this.internalStyle =
+      "@import url(https://github.backroomswiki.cn/Super_Liminal/css/basic-styles.css);\n";
+    this.head = "";
 
     for (const rule of RULES) {
       const RendererType = RENDERERS.get(rule);
@@ -57,6 +61,8 @@ export class Page {
         }
       }
     }
+    this.internalStyle +=
+      "@import url(https://github.backroomswiki.cn/Super_Liminal/css/super-liminal.css);\n";
     return output.join("");
   }
 
@@ -68,17 +74,21 @@ export class Page {
       .join("");
   }
 
-  renderHtml({title, source, tags}: {title: string, source: string, tags: string}): string {
+  renderHtml({ title, source, tags }: { title: string; source: string; tags: string }): string {
+    const content = this.renderSource(source);
+    const finalTitle =
+      title.length > 0 ? `${title} - The Backrooms中文维基` : `The Backrooms中文维基`;
+    const finalTags = this.renderTags(tags);
     return `
 <!DOCTYPE html>
 <html>
 
 <head>
-    <title>${title} - The Backrooms中文维基</title>
+    <title>${finalTitle}</title>
     <style type="text/css" id="internal-style">
-        @import url(https://github.backroomswiki.cn/Super_Liminal/css/basic-styles.css);
-        @import url(https://github.backroomswiki.cn/Super_Liminal/css/super-liminal.css);
+      ${this.internalStyle}
     </style>
+    ${this.head}
 </head>
 
 <body id="html-body">
@@ -395,9 +405,9 @@ export class Page {
                         <div id="main-content">
                             <div id="action-area-top"></div>
                             <div id="page-title">${title}</div>
-                            <div id="page-content">${this.renderSource(source)}</div>
+                            <div id="page-content">${content}</div>
                             <div class="page-tags">
-                                <span>${this.renderTags(tags)}</span>
+                                <span>${finalTags}</span>
                             </div>
                             <div id="page-info-break"></div>
                             <div id="page-options-container"></div>
@@ -438,6 +448,6 @@ export class Page {
 </body>
 
 </html>
-`
+`;
   }
 }

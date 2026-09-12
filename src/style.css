@@ -5,8 +5,12 @@
 @import "https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap";
 
 :root {
-  --body-font: Inter, "Noto Sans SC", "Noto Sans TC", "Segoe UI", Roboto, "Helvetica Neue", "Liberation Sans", Arial, sans-serif;
-  --mono-font: "JetBrains Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", "Noto Sans SC", "Noto Sans TC", monospace;
+  --body-font:
+    Inter, "Noto Sans SC", "Noto Sans TC", "Segoe UI", Roboto, "Helvetica Neue", "Liberation Sans",
+    Arial, sans-serif;
+  --mono-font:
+    "JetBrains Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", "Noto Sans SC",
+    "Noto Sans TC", monospace;
   --body-font-size: clamp(0.825rem, calc(0.775rem + 0.195vw), 1rem);
   --body-line-height: 1.5;
   --body-width: 45rem;
@@ -81,7 +85,9 @@ body {
   flex-wrap: wrap;
   gap: 0.5rem;
 }
-#title, #source, #tags {
+#title,
+#source,
+#tags {
   appearance: none;
   margin: 0;
   outline: 0;
@@ -96,7 +102,9 @@ body {
   margin: 0;
   padding: 0 0.25em;
   box-shadow: 0 0 0 0 rgb(var(--focus-bg-color));
-  transition: box-shadow var(--transition), border-color var(--transition);
+  transition:
+    box-shadow var(--transition),
+    border-color var(--transition);
 }
 :is(#title, #source, #tags):focus-visible {
   box-shadow: 0 0 0 0.125em rgb(var(--focus-bg-color));

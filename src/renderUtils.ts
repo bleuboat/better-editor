@@ -55,7 +55,7 @@ export const RULES = [
   "File",
   "Center",
   "Newline",
-  "Paragraph" ,
+  "Paragraph",
   "Url",
   "Email",
   "Mathinline",
@@ -71,7 +71,6 @@ export const RULES = [
   "Typography",
   "Tighten",
 ];
-
 
 export class Renderer {
   regex: RegExp | undefined;
@@ -106,16 +105,15 @@ export class Renderer {
 
   process = (..._matches: string[]): string => {
     throw Error;
-  }
+  };
 
   render = (_options: { [key: string]: unknown }): string => {
     throw Error;
-  }
+  };
 
   error(message: string): string {
-    return `<div class="error-block">${message}</div>`
+    return `<div class="error-block">${message}</div>`;
   }
 }
-
 
 export const RENDERERS = new Map<string, typeof Renderer>();
