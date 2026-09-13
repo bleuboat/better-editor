@@ -1,12 +1,13 @@
-import { Renderer } from "../utils/render.ts";
+import { DELIM, Renderer } from "../utils/render.ts";
 
 (class extends Renderer {
-  process = (...matches: string[]): string => {
-    return matches[0];
+  regex = new RegExp(DELIM, "g");
+
+  process = (..._matches: string[]): string => {
+    return this.token();
   };
 
   render = (_options: { [key: string]: unknown }): string => {
-    return "";
+    return DELIM;
   };
 }).register("Delimiter");
-

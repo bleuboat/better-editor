@@ -5,15 +5,14 @@ import { DELIM, RULES, Renderer } from "./utils/render.ts";
 
 export class Page {
   renderers: Map<string, Renderer>;
-  vars: Map<string, unknown>;
+  vars: { [key: string]: unknown };
   tokens: [string, { [key: string]: unknown }][];
-  head: string;
 
   constructor() {
-    this.renderers = new Map();
-    this.vars = new Map();
+    this.renderers = new Map;
+    this.vars = {};
     this.tokens = [];
-    this.head = "";
+    this.vars.head = "";
 
     for (const rule of RULES) {
       const RendererType = Renderer.all.get(rule);
@@ -27,7 +26,7 @@ export class Page {
   renderTitle(title: string): void {
     const finalTitle =
       title.length > 0 ? `${title} - The Backrooms中文维基` : `The Backrooms中文维基`;
-    this.head += `<title>${finalTitle}</title>\n`;
+    this.vars.head += `<title>${finalTitle}</title>\n`;
   }
 
   renderLoginStatus(): string {
@@ -42,9 +41,7 @@ export class Page {
     }
     const title = params.get("title");
     const name = params.get("name");
-    if (!title || !name) {
-      throw Error;
-    }
+    if (!title || !name) throw Error;
     return `
       ${printUser(number, title, name)}
       |
@@ -67,6 +64,7 @@ export class Page {
     for (const renderer of this.renderers.values()) {
       source = renderer.parseWithFallback(source);
     }
+    console.log(source);
     const output: string[] = [];
     const key: string[] = [];
     let in_delim = false;
@@ -92,7 +90,7 @@ export class Page {
         }
       }
     }
-    this.head += `
+    this.vars.head += `
       <style type="text/css" id="internal-style">
         @import url(https://github.backroomswiki.cn/Super_Liminal/css/basic-styles.css);
         @import url(https://github.backroomswiki.cn/Old_BHL/css/liminal-impact.css);
@@ -110,9 +108,9 @@ export class Page {
   }
 
   renderHtml({ title, source, tags }: DataType): string {
-    this.vars.clear();
+    this.vars = {};
     this.tokens.length = 0;
-    this.head = "";
+    this.vars.head = "";
 
     this.renderTitle(title);
     const loginStatus = this.renderLoginStatus();
@@ -123,7 +121,7 @@ export class Page {
 <html>
 
 <head>
-  ${this.head}
+  ${this.vars.head}
 </head>
 
 <body id="html-body">

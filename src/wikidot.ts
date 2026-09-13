@@ -18,10 +18,7 @@ export function load(doc: Document): void {
   const accountTopbutton = doc.getElementById("account-topbutton");
   const accountOptions = doc.getElementById("account-options");
 
-  if (
-    accountTopbutton instanceof HTMLAnchorElement &&
-    accountOptions instanceof HTMLDivElement
-  ) {
+  if (accountTopbutton && accountOptions) {
     accountTopbutton.addEventListener("mousedown", () => {
       accountOptions.style = "display: block;";
     });

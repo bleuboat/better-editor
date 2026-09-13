@@ -11,4 +11,3 @@ import { Renderer } from "../utils/render.ts";
     return "";
   };
 }).register("Module");
-

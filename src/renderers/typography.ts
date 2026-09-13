@@ -1,12 +1,57 @@
 import { Renderer } from "../utils/render.ts";
 
-(class extends Renderer {
-  process = (...matches: string[]): string => {
-    return matches[0];
-  };
+const REPLACEMENTS = {
+  "``" : "&#8220;",
+  "''" : "&#8221;",
+  ",," : "&#8222;",
+  "`" : "&#8216;",
+  "'" : "&#8217;",
+  "<<" : "&#171;",
+  ">>" : "&#187;",
+  " " : "&#160;",
+  "..." : "&#8230;",
+  "---" : "&#8212;",
+  "--" : "&#8212;",
+};
 
-  render = (_options: { [key: string]: unknown }): string => {
-    return "";
+(class extends Renderer {
+  parse(source: string): string {
+    source = source.replaceAll(
+      /``(.*?)''/g,
+      REPLACEMENTS["``"] + '$1' + REPLACEMENTS["''"],
+    );
+    source = source.replaceAll(
+      /,,(.*?)''/g,
+      REPLACEMENTS[",,"] + '$1' + REPLACEMENTS["''"],
+    );
+    source = source.replaceAll(
+      /`(.*?)'/g,
+      REPLACEMENTS["`"] + '$1' + REPLACEMENTS["'"],
+    );
+    source = source.replaceAll(
+      /<</g,
+      REPLACEMENTS["<<"],
+    );
+    source = source.replaceAll(
+      />>/g,
+      REPLACEMENTS[">>"],
+    );
+    source = source.replaceAll(
+      /(?<=[0-9]) (?=[0-9])/g,
+      REPLACEMENTS[" "],
+    )
+    source = source.replaceAll(
+      /\.\.\.|\. \. \./g,
+      REPLACEMENTS["..."],
+    )
+    source = source.replaceAll(
+      /--/g,
+      REPLACEMENTS["--"],
+    )
+    source = source.replaceAll(
+      /---/g,
+      REPLACEMENTS["---"],
+    )
+    return source;
   };
 }).register("Typography");
-

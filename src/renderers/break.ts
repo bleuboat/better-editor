@@ -3,12 +3,11 @@ import { Renderer } from "../utils/render.ts";
 (class extends Renderer {
   regex = / _\n/g;
 
-  process = (...matches: string[]): string => {
-    return matches[0];
+  process = (..._matches: string[]): string => {
+    return this.token();
   };
 
   render = (_options: { [key: string]: unknown }): string => {
-    return "";
+    return "<br />";
   };
 }).register("Break");
-

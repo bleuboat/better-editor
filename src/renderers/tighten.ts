@@ -1,12 +1,7 @@
 import { Renderer } from "../utils/render.ts";
 
 (class extends Renderer {
-  process = (...matches: string[]): string => {
-    return matches[0];
-  };
-
-  render = (_options: { [key: string]: unknown }): string => {
-    return "";
+  parse(source: string): string {
+    return source.replaceAll("\n", "");
   };
 }).register("Tighten");
-

@@ -95,23 +95,22 @@ for old_renderer in wikidot.iterdir():
           regex[3].replace("\\>", ">")).replace("\\-\\-", "--").replace("{", "\\{").replace("}", "\\}")
         }/{regex[4].lower()}g;\n"
     else:
-        print(old_renderer)
         regex = ""
     if "?R" in regex:
-        continue;
-    new_renderer.write_text(rf"""import {{ Renderer }} from "../utils/render.ts";
+        regex = regex.replace("(?:(?R)|.)", ".")
+        regex += "  recursion = true;\n"
+#     new_renderer.write_text(rf"""import {{ Renderer }} from "../utils/render.ts";
 
-(class extends Renderer {{{regex}
-  process = (...matches: string[]): string => {{
-    return matches[0];
-  }};
+# (class extends Renderer {{{regex}
+#   process = (...matches: string[]): string => {{
+#     return matches[0];
+#   }};
 
-  render = (_options: {{ [key: string]: unknown }}): string => {{
-    return "";
-  }};
-}}).register("{stem}");
-
-""", encoding="utf-8")
+#   render = (_options: {{ [key: string]: unknown }}): string => {{
+#     return "";
+#   }};
+# }}).register("{stem}");
+# """, encoding="utf-8")
     init.append(f'import "./renderers/{name}";\n')
 
 Path("src/renderers.ts").write_text("".join(init))

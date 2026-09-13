@@ -4,11 +4,14 @@ import { Renderer } from "../utils/render.ts";
   regex = /(\[\[# )([-_A-Za-z0-9.%]+?)(\]\])/ig;
 
   process = (...matches: string[]): string => {
-    return matches[0];
+    const name = matches[2];
+    const start = this.token({ name: name });
+    return start;
   };
 
-  render = (_options: { [key: string]: unknown }): string => {
-    return "";
+  render = (options: { [key: string]: unknown }): string => {
+    const element = document.createElement("a");
+    element.name = options.name as string;
+    return element.outerHTML;
   };
 }).register("Anchor");
-

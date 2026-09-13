@@ -73,10 +73,11 @@ export const RULES = [
 ];
 
 export class Renderer {
-  static all: Map<string, typeof Renderer> = new Map();
-  regex: RegExp | undefined;
-  rule: string;
-  page: Page;
+  static all: Map<string, typeof Renderer> = new Map;
+  protected regex: RegExp | undefined;
+  protected recursion: boolean = false;
+  protected rule: string;
+  protected page: Page;
 
   constructor(rule: string, page: Page) {
     this.rule = rule;
@@ -87,14 +88,42 @@ export class Renderer {
     Renderer.all.set(name, this);
   }
 
-  token(options: { [key: string]: unknown }): string {
+  protected token(options: { [key: string]: unknown } = {}): string {
     this.page.tokens.push([this.rule, options]);
     return DELIM + String(this.page.tokens.length - 1) + DELIM;
   }
 
-  parse(source: string): string {
+  protected error(message: string): string {
+    return `<div class="error-block">${message}</div>`;
+  }
+
+  protected attrs(text: string): { [key: string]: string } {
+    const tmp = text.trim().split('="');
+    const attrs: { [key: string]: string } = {};
+    let key = null;
+
+    for (const [ i, val ] of tmp.entries()) {
+      if (i == 0) {
+        key = val.trim();
+        continue;
+      }
+      const pos = val.indexOf('"');
+      attrs[key!] = val.substring(0, pos).replaceAll(/\\(.)/g, "$1");
+      key = val.substring(pos + 1).trim();
+    }
+
+    return attrs;
+  }
+
+  protected parse(source: string): string {
     if (!this.regex) return source;
-    return source.replaceAll(this.regex, this.process);
+    if (!this.recursion) return source.replaceAll(this.regex, this.process);
+    for (let i = 0; i < 100; i++) {
+      const newSource = source.replaceAll(this.regex, this.process);
+      if (source === newSource) return source;
+      source = newSource;
+    }
+    throw Error;
   }
 
   parseWithFallback(source: string): string {
@@ -110,8 +139,4 @@ export class Renderer {
   render = (_options: { [key: string]: unknown }): string => {
     throw Error;
   };
-
-  error(message: string): string {
-    return `<div class="error-block">${message}</div>`;
-  }
 }

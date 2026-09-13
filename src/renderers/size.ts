@@ -1,7 +1,8 @@
 import { Renderer } from "../utils/render.ts";
 
 (class extends Renderer {
-  regex = /\(\(bibcite\s([a-z0-9]+)\)\)/ig;
+  regex = /\[\[size\s([^\]]+)\]\](.*?)\[\[\/size\]\]/msig;
+  recursion = true;
 
   process = (...matches: string[]): string => {
     return matches[0];
@@ -10,4 +11,4 @@ import { Renderer } from "../utils/render.ts";
   render = (_options: { [key: string]: unknown }): string => {
     return "";
   };
-}).register("Bibcite");
+}).register("Size");

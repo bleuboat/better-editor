@@ -26,6 +26,11 @@
   --base-accent-medium: 24, 80, 187;
   --base-accent-dark: 23, 24, 120;
 
+  --warning-color: 220, 53, 69;
+  --accept-color: 140, 164, 46;
+  --warning-text-color: var(--base-white);
+  --accept-text-color: var(--base-white);
+
   --bg-color: var(--base-white);
   --text-color: var(--base-black);
   --light-bg-color: var(--base-light);
@@ -128,6 +133,19 @@ textarea {
 .text:focus-visible {
   box-shadow: 0 0 0 0.125em rgb(var(--focus-bg-color));
   border-color: rgb(var(--focus-bg-color));
+}
+#save-content {
+  flex: 100%;
+  padding: 0.75rem 1rem;
+  display: none;
+}
+.warning {
+  background: rgb(var(--warning-color));
+  color: rgb(var(--warning-text-color));
+}
+.accept {
+  background: rgb(var(--accept-color));
+  color: rgb(var(--accept-text-color));
 }
 #buttons {
   flex: 100%;
